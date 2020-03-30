@@ -236,9 +236,13 @@ class ImgOccNoteGenerator(object):
     def _findByNoteId(self, note_id):
         """Search collection for notes with given ID"""
         # 查询与当前图片相关的所有notes，例如条件：a8c1edaa09b442f2b0f581bfca40c526-ao*
-        query = "'%s':'%s*'" % (self.ioflds['id'], note_id)
+        # self.ioflds是Image Occlusion Enhanced这种note type下的各个字段
+        # query = "'%s':'%s*'" % (self.ioflds['id'], note_id)
+        query = '"%s:%s*"' % (self.ioflds['id'], note_id)
         logging.debug("query %s", query)
+        print("query: {}".format(query))
         res = mw.col.findNotes(query)
+        print("res: {}".format(res))
         return res
 
     def _findAllNotes(self):
@@ -246,6 +250,7 @@ class ImgOccNoteGenerator(object):
         old_occl_id = '%s-%s' % (self.uniq_id, self.opref["occl_tp"])
         res = self._findByNoteId(old_occl_id)
         self.nids = {}
+        print("🧩 ImgOccNoteGenerator._findAllNotes 查找所有与当前图片相关的notes, res: {}".format(res))
         for nid in res:
             note_id = mw.col.getNote(nid)[self.ioflds['id']]
             self.nids[note_id] = nid
@@ -269,6 +274,7 @@ class ImgOccNoteGenerator(object):
             mnode_ids.values()) if x.startswith(uniq_id)]
         valid_nid_note_ids = [x for x in list(
             nids.keys()) if x.startswith(uniq_id)]
+        print("nids.keys(): {}".format(nids.keys()))
         # filter out notes that have already been deleted manually
         exstg_mnode_note_ids = [
             x for x in valid_mnode_note_ids if x in valid_nid_note_ids]
