@@ -75,7 +75,6 @@ class ImgOccWebView(webview.AnkiWebView):
 
 class ImgOccEdit(QDialog):
     """Main Image Occlusion Editor dialog"""
-
     def __init__(self, imgoccadd, parent):
         QDialog.__init__(self)
         mw.setupDialogGC(self)
@@ -109,6 +108,7 @@ class ImgOccEdit(QDialog):
 
     def setupUi(self):
         """Set up ImgOccEdit UI"""
+        print("🧩 ImgOccEdit.setupUi 设置编辑器界面...")
         # Main widgets aside from fields
         self.svg_edit = ImgOccWebView(parent=self)
         self.svg_edit._page = ImgOccWebPage(self.svg_edit._onBridgeCmd)
@@ -188,6 +188,7 @@ class ImgOccEdit(QDialog):
                     self.oa_btn, close_button]:
             btn.setFocusPolicy(Qt.ClickFocus)
 
+        print("🧩 ImgOccEdit.setupUi 绑定编辑按钮和执行的方法的关系，edit_btn -> editNote")
         self.edit_btn.clicked.connect(self.editNote)
         self.new_btn.clicked.connect(self.new)
         self.ao_btn.clicked.connect(self.addAO)
@@ -295,6 +296,7 @@ class ImgOccEdit(QDialog):
         self.imgoccadd.onAddNotesButton(choice, close)
 
     def editNote(self):
+        print("🧩 ImgOccEdit.editNote 准备编辑note")
         choice = self.occl_tp_select.currentText()
         self.imgoccadd.onEditNotesButton(choice)
 

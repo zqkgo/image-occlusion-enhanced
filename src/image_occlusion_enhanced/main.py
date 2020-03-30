@@ -57,6 +57,7 @@ def onIoHelp():
 
 def onImgOccButton(self, origin=None, image_path=None):
     """Launch Image Occlusion Enhanced"""
+    print("🧩 main.onImgOccButton 点击了ImgOcc按钮")
     origin = origin or getEdParentInstance(self.parentWindow)
     io_model = getOrCreateModel()
     if io_model:
@@ -80,6 +81,7 @@ def onImgOccButton(self, origin=None, image_path=None):
 
 def onSetupEditorButtons(buttons, editor):
     """Add IO button to Editor"""
+    print("🧩 main.onSetupEditorButtons 调用设置Anki编辑器按钮的钩子函数")
     conf = mw.pm.profile.get("imgocc")
     if not conf:
         hotkey = IO_HOTKEY
@@ -244,6 +246,7 @@ def onShowAnswer(self, _old):
 
 
 # Set up menus
+print("🧩 加载Image &Occlusion Enhanced插件...")
 options_action = QAction("Image &Occlusion Enhanced Options...", mw)
 help_action = QAction("Image &Occlusion Enhanced...", mw)
 options_action.triggered.connect(onIoSettings)
@@ -259,6 +262,11 @@ addHook("profileLoaded", onProfileLoaded)
 
 # aqt.editor.Editor
 addHook('setupEditorButtons', onSetupEditorButtons)
+# zqk testing
+def HelloWorld(buttons, editor):
+    print("Hello setupEditorButtons...")
+    return buttons
+addHook("setupEditorButtons", HelloWorld)
 EditorWebView.contextMenuEvent = contextMenuEvent
 Editor.setNote = wrap(Editor.setNote, onSetNote, "after")
 Editor.onImgOccButton = onImgOccButton

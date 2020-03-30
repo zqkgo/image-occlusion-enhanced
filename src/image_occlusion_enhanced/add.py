@@ -60,14 +60,17 @@ class ImgOccAdd(object):
     def occlude(self, image_path=None):
 
         note = self.ed.note
+        # 存在note并且也存在Image Occlusion Enhanced这种note type
         isIO = (note and note.model() == getOrCreateModel())
 
         if not image_path:
             if self.origin == "addcards":
+                print("🧩 ImgOccAdd.occlude 新增note")
                 image_path = self.getNewImage(parent=self.ed.parentWindow)
                 if not image_path:
                     return False
             elif isIO:
+                print("🧩 ImgOccAdd.occlude 编辑note")
                 msg, image_path = self.getIONoteData(note)
                 self.mode = "edit"
                 if not image_path:
@@ -177,6 +180,7 @@ class ImgOccAdd(object):
 
     def callImgOccEdit(self, width, height):
         """Set up variables, call and prepare ImgOccEdit"""
+        print("🧩 ImgOccAdd.callImgOccEdit 调起编辑器窗口(新增|编辑)")
         ofill = self.sconf['ofill']
         scol = self.sconf['scol']
         swidth = self.sconf['swidth']
@@ -288,6 +292,7 @@ class ImgOccAdd(object):
         did = dialog.deckChooser.selectedId()
 
         noteGenerator = genByKey(choice)
+        print("🧩 ImgOccAdd._onAddNotesButton 构造note生成器(note generator)")
         gen = noteGenerator(self.ed, svg, self.image_path,
                             self.opref, tags, fields, did)
         r = gen.generateNotes()
@@ -319,17 +324,17 @@ class ImgOccAdd(object):
     def _onEditNotesButton(self, choice, svg):
         """Get occlusion settings and pass them to the note generator (edit)"""
         dialog = self.imgoccedit
-
         r1 = self.getUserInputs(dialog, edit=True)
         if r1 is False:
             return False
         (fields, tags) = r1
         did = self.opref["did"]
         old_occl_tp = self.opref["occl_tp"]
-
+        print("🧩 ImgOccAdd._onEditNotesButton 获取note generator实例")
         noteGenerator = genByKey(choice, old_occl_tp)
         gen = noteGenerator(self.ed, svg, self.image_path,
                             self.opref, tags, fields, did)
+        
         r = gen.updateNotes()
         if r is False:
             return False

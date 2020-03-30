@@ -100,11 +100,13 @@ class ImgOccNoteGenerator(object):
 
     def updateNotes(self):
         """Update existing notes"""
+        print("🧩 ImgOccNoteGenerator.updateNotes 准备更新notes")
         state = "default"
         self.uniq_id = self.opref['uniq_id']
         self.occl_id = '%s-%s' % (self.uniq_id, self.occl_tp)
         omask_path = None
 
+        # 查询与当前图片相关的所有notes
         self._findAllNotes()
         (svg_node, mlayer_node) = self._getMnodesAndSetIds(True)
         if not self.mnode_ids:
@@ -233,6 +235,7 @@ class ImgOccNoteGenerator(object):
 
     def _findByNoteId(self, note_id):
         """Search collection for notes with given ID"""
+        # 查询与当前图片相关的所有notes，例如条件：a8c1edaa09b442f2b0f581bfca40c526-ao*
         query = "'%s':'%s*'" % (self.ioflds['id'], note_id)
         logging.debug("query %s", query)
         res = mw.col.findNotes(query)
@@ -256,6 +259,7 @@ class ImgOccNoteGenerator(object):
         on which, either delete their respective notes or ID them in correspondence
         with the numbering of older nodes
         """
+        print("🧩 ImgOccNoteGenerator._deleteAndIdNotes 计算删除或添加notes的数量")
         uniq_id = self.opref['uniq_id']
         mnode_ids = self.mnode_ids
         nids = self.nids
@@ -347,9 +351,11 @@ class ImgOccNoteGenerator(object):
             if not ioAskUser("custom", text=q, title="Please confirm action",
                              parent=self.ed.imgoccadd.imgoccedit, help="edit"):
                 # TODO: pass imgoccedit instance to ngen in order to avoid ↑ this
+                print("🧩 ImgOccNoteGenerator._deleteAndIdNotes 不进行任何添加和删除动作")
                 return False
 
         if deleted_nids:
+            print("🧩 ImgOccNoteGenerator._deleteAndIdNotes 删除notes ids: {}".format(deleted_nids))
             mw.col.remNotes(deleted_nids)
         return (del_count, new_count)
 
